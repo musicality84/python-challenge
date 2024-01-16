@@ -4,11 +4,15 @@ csvpath = os.path.join('Resources','election_data.csv') #import csv file
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',') #open csv file
     csv_header = next(csvreader) #skip header
-    #establish variables
+    #establish variables in winner library
     total = 0
     candidates = []
     candidates_unique = []
     candidate_count = []
+    candidate_total = 0
+    candidate_percent = 0
+    candidate_total_storage = {}
+    winner_tally = 0
     first_row = next(csvreader)
     first_row_candidate = str(first_row[2])
     for row in csvreader:
@@ -22,31 +26,40 @@ with open(csvpath) as csvfile:
                     candidates_unique.append(name)
         else:
             candidate_count.append(str(row[2]))
-    candidate_1_votes = candidate_count.count(candidates_unique[0])+1 #adds plus one since we skipped the first row
-    candidate_2_votes = candidate_count.count(candidates_unique[1])
-    candidate_3_votes = candidate_count.count(candidates_unique[2])
-    candidate_1_percent = candidate_1_votes/(candidate_1_votes+candidate_2_votes+candidate_3_votes)*100
-    candidate_1_percent = round(candidate_1_percent,3)
-    candidate_2_percent = candidate_2_votes / (candidate_1_votes + candidate_2_votes + candidate_3_votes) * 100
-    candidate_2_percent = round(candidate_2_percent, 3)
-    candidate_3_percent = candidate_3_votes / (candidate_1_votes + candidate_2_votes + candidate_3_votes) * 100
-    candidate_3_percent = round(candidate_3_percent, 3)
 print("Election Results")
 print("-----------------")
 print(f"Total Votes: {total+1}")#adds the skipped row 1 back to the count
 print("-----------------")
-print(f"{candidates_unique[0]}: {candidate_1_percent}% ({candidate_1_votes})")
-print(f"{candidates_unique[1]}: {candidate_2_percent}% ({candidate_2_votes})")
-print(f"{candidates_unique[2]}: {candidate_3_percent}% ({candidate_3_votes})")
+for name in candidates_unique:
+    candidate_total = candidate_count.count(name)
+    candidate_percent = (candidate_total/total)*100
+    candidate_percent = round(candidate_percent,3)
+    print(f"{name}: {candidate_percent}% ({candidate_total})")
+    candidate_total_storage[name] = candidate_total
+    candidate_total = 0
+    candidate_percent = 0
 print("-----------------")
-print(f"Winner: {candidates_unique[1]}")
+for key in candidate_total_storage:
+    if candidate_total_storage[key] > winner_tally:
+        winner_tally = candidate_total_storage[key]
+        winner_name = key
+print(f"Winner: {winner_name}")
 with open("results.txt", "w") as txt_file:
     print("Election Results", file = txt_file)
     print("-----------------", file = txt_file)
     print(f"Total Votes: {total + 1}", file = txt_file)  # adds the skipped row 1 back to the count
     print("-----------------", file = txt_file)
-    print(f"{candidates_unique[0]}: {candidate_1_percent}% ({candidate_1_votes})", file = txt_file)
-    print(f"{candidates_unique[1]}: {candidate_2_percent}% ({candidate_2_votes})", file = txt_file)
-    print(f"{candidates_unique[2]}: {candidate_3_percent}% ({candidate_3_votes})", file = txt_file)
+    for name in candidates_unique: #counts number of votes for each candidate based on the number of times the name appears in the candidate_count list and calculates the percentage of total votes
+        candidate_total = candidate_count.count(name)
+        candidate_percent = (candidate_total / total) * 100
+        candidate_percent = round(candidate_percent, 3)
+        print(f"{name}: {candidate_percent}% ({candidate_total})", file = txt_file)
+        candidate_total_storage[name] = candidate_total #appends dictionary with total votes per candidate in for use when calculating winner
+        candidate_total = 0
+        candidate_percent = 0
     print("-----------------", file = txt_file)
-    print(f"Winner: {candidates_unique[1]}", file = txt_file)
+    for key in candidate_total_storage:
+        if candidate_total_storage[key] > winner_tally:
+            winner_tally = candidate_total_storage[key]
+            winner_name = key
+    print(f"Winner: {winner_name}", file=txt_file)
