@@ -40,3 +40,13 @@ print(f"{candidates_unique[1]}: {candidate_2_percent}% ({candidate_2_votes})")
 print(f"{candidates_unique[2]}: {candidate_3_percent}% ({candidate_3_votes})")
 print("-----------------")
 print(f"Winner: {candidates_unique[1]}")
+with open("results.txt", "w") as txt_file:
+    print("Election Results", file = txt_file)
+    print("-----------------", file = txt_file)
+    print(f"Total Votes: {total + 1}", file = txt_file)  # adds the skipped row 1 back to the count
+    print("-----------------", file = txt_file)
+    print(f"{candidates_unique[0]}: {candidate_1_percent}% ({candidate_1_votes})", file = txt_file)
+    print(f"{candidates_unique[1]}: {candidate_2_percent}% ({candidate_2_votes})", file = txt_file)
+    print(f"{candidates_unique[2]}: {candidate_3_percent}% ({candidate_3_votes})", file = txt_file)
+    print("-----------------", file = txt_file)
+    print(f"Winner: {candidates_unique[1]}", file = txt_file)

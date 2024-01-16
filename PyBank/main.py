@@ -36,3 +36,11 @@ print(f"Total: {total+int(first_row[1])}") #adds the skipped first row back to t
 print(f"Average Change:{average_change}")
 print(f"Greatest increase in profits: {profit_month_increase} {profit_increase}")
 print(f"Greatest decrease in profits: {profit_month_decrease} {profit_decrease}")
+with open("results.txt", "w") as txt_file:
+    print("Financial Analysis", file = txt_file)
+    print("===================", file = txt_file)
+    print(f"Total Months: {months + 1}", file = txt_file)  # adds a month since the for loop started on row 2
+    print(f"Total: {total + int(first_row[1])}", file = txt_file)  # adds the skipped first row back to the total
+    print(f"Average Change:{average_change}", file = txt_file)
+    print(f"Greatest increase in profits: {profit_month_increase} {profit_increase}", file = txt_file)
+    print(f"Greatest decrease in profits: {profit_month_decrease} {profit_decrease}", file = txt_file)
